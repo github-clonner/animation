@@ -1,7 +1,6 @@
-import React, {
-  Component,
-  PropTypes,
-} from 'react';
+import React, { PureComponent } from 'react';
+
+import PropTypes from 'prop-types';
 
 import {
   View,
@@ -61,7 +60,7 @@ export default function makeZoomable(ComponentToBeDecorated) {
    * within the view and updates the style of the decorated component with new values
    * for width, height and absolute position.
    */
-  class ZoomDecorator extends Component {
+  class ZoomDecorator extends PureComponent {
     static propTypes = {
       componentWidth: PropTypes.number.isRequired,
       componentHeight: PropTypes.number.isRequired,
@@ -94,13 +93,13 @@ export default function makeZoomable(ComponentToBeDecorated) {
       };
     }
 
-    componentWillMount() {
+    componentDidMount() {
       this._panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onStartShouldSetPanResponderCapture: () => true,
         onMoveShouldSetPanResponder: () => true,
         onMoveShouldSetPanResponderCapture: () => true,
-        onPanResponderGrant: () => {},
+        onPanResponderGrant: () => { },
         onPanResponderMove: (evt, gesture) => {
           const touches = evt.nativeEvent.touches;
           const touch1 = touches[0];
@@ -131,7 +130,7 @@ export default function makeZoomable(ComponentToBeDecorated) {
             isMoving: false,
           });
         },
-        onPanResponderTerminate: () => {},
+        onPanResponderTerminate: () => { },
         onShouldBlockNativeResponder: () => true,
       });
     }
@@ -257,4 +256,3 @@ export default function makeZoomable(ComponentToBeDecorated) {
 
   return ZoomDecorator;
 }
-

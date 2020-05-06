@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import ReactNative, { Animated, View, Dimensions } from 'react-native';
 
 import { DriverShape } from '../drivers/DriverShape';
@@ -30,7 +31,7 @@ import { measure } from '../components/measure';
  * Above code will create scroll dependent parallax animation over Image component
  * where image will be scrolled 2 times faster than Title
  */
-class Parallax extends Component {
+class Parallax extends PureComponent {
   static propTypes = {
     /**
      * An instance of animation driver, usually ScrollDriver
@@ -39,28 +40,28 @@ class Parallax extends Component {
     /**
      * Components to which an effect will be applied
      */
-    children: React.PropTypes.node,
+    children: PropTypes.node,
     /**
      * extrapolation options for parallax translation
      * if not passed children would be translated by
      * scrollVector * (scrollSpeed - 1) * driver.value
      * where scroll vector is defined by scrolling direction
      */
-    extrapolation: React.PropTypes.object,
+    extrapolation: PropTypes.object,
     /**
      * how fast passed children would scroll
      */
-    scrollSpeed: React.PropTypes.number,
+    scrollSpeed: PropTypes.number,
     /**
      * Is Parallax placed in or outside the ScrollView
      */
-    insideScroll: React.PropTypes.bool,
+    insideScroll: PropTypes.bool,
     /**
      * Is parallax used as header
      */
-    header: React.PropTypes.bool,
+    header: PropTypes.bool,
 
-    style: React.PropTypes.object,
+    style: PropTypes.object,
   }
 
   static defaultProps = {
@@ -75,15 +76,14 @@ class Parallax extends Component {
   }
 
   calculateTranslation(scrollOffset) {
-    const { pageY } = this.state.layout;
-    const { driver } = this.props;
-    const scrollHeight = driver.layout.height;
+    const { layout: { pageY } } = this.state;
+    const { driver: { layout: { height: scrollHeight } } } = this.props;
     this.translation.setValue(scrollOffset.value - (pageY - scrollHeight / 2));
   }
 
-  componentWillMount() {
-    const { driver } = this.props;
-    this.animationListener = driver.value.addListener(this.calculateTranslation);
+  componentDidMount() {
+    const { driver: { value: { addlistener } } } = this.props;
+    this.animationListener = addListener(this.calculateTranslation);
   }
 
   componentWillUnmount() {
